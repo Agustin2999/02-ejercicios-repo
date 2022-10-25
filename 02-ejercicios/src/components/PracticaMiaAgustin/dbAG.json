@@ -1,0 +1,64 @@
+{
+  "vestimenta": [
+    {
+      "id": 1,
+      "apodo": "Jean negro corte chino",
+      "especial_para": "Vestir",
+      "elemento": "Pantalon"
+    },
+    {
+      "id": 2,
+      "apodo": "Pantalon rojo de river",
+      "especial_para": "Diario, Deportivo, Entrecasa",
+      "elemento": "Pantalon"
+    },
+    {
+      "id": 3,
+      "apodo": "Buzo gris adidas cuello enorme",
+      "especial_para": "Entrecasa, Diario",
+      "elemento": "Buzo"
+    },
+    {
+      "id": 4,
+      "apodo": "Buzo messi 10 negro",
+      "especial_para": "Diario, Entrecasa",
+      "elemento": "Buzo"
+    },
+    {
+      "id": 5,
+      "apodo": "Chomba blancas",
+      "especial_para": "Salir, Vestir",
+      "elemento": "Remera"
+    },
+    {
+      "id": 6,
+      "apodo": "Remera del barsa4",
+      "especial_para": "Deportivo, Diario, Entrecasa",
+      "elemento": "Remera"
+    },
+    {
+      "id": 7,
+      "apodo": "Campera belgrano gruesa",
+      "especial_para": "Diario, Deportivo, Entrecasa",
+      "elemento": "Campera"
+    },
+    {
+      "id": 8,
+      "apodo": "Campera I-run Azul",
+      "especial_para": "Salir, Diario",
+      "elemento": "Campera"
+    },
+    {
+      "id": 11,
+      "apodo": "ELIMINAME 11",
+      "especial_para": "BORRAR",
+      "elemento": "Campera"
+    },
+    {
+      "id": 15,
+      "apodo": "ELIMINAME 15",
+      "especial_para": "BORRAR",
+      "elemento": "Campera"
+    }
+  ]
+}
