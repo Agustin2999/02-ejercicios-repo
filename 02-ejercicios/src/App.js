@@ -3,6 +3,9 @@ import CrudApi from './components/CrudApi';
 import CrudApp from "./components/CrudApp";
 import SongSearch from "./components/SongSearch";
 import PracticaMiaAgustin from "./components/PracticaMiaAgustin/CrudAG";
+import SelectsAnidados from './components/SelectsAnidados';
+import ContactForm from './components/ContactForm';
+import Modals from './components/Modals';
 /**
  *  frase de jon mircha: divide y venceras,
  *                        divide y reutilizarás
@@ -11,17 +14,28 @@ function App() {
   return (
     <>
       <h1>Ejercicios React</h1>
+      <Modals/>
+      
+      <hr/>
+      <ContactForm/>
+      
+      <hr/>
+      <SelectsAnidados/>
+
+
+      
+      <hr />
       <PracticaMiaAgustin />{/*Ejercicio de practica para ver como voy*/}
 
 
 
 
       <hr />
-      {/* <SongSearch /> */}
+      <SongSearch />
       <hr />
-      {/*<CrudApi />*simulamos api en json server*/}
+      <CrudApi />{/*simulamos api en json server*/}
       <hr />
-       {/*<CrudApp />*simulamos api en el mismo codigo de js */}
+      <CrudApp />{/*simulamos api en el mismo codigo de js */}
       <hr />
     </>
   );

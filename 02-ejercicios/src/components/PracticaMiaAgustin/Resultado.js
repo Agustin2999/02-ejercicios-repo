@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './estilos.css'
 
-
 const negrita={
     fontWeight:'Bold' 
 }
-
 
 const Resultado = ({ elemento,prenda }) => {
 
@@ -21,7 +19,6 @@ const Resultado = ({ elemento,prenda }) => {
     return (
         <>
             {
-
                 <div class="divResultado">
                     <table className="centradoVerti">
                         <tbody>
@@ -31,17 +28,13 @@ const Resultado = ({ elemento,prenda }) => {
                                 </td>
                                 <td colSpan={"1"} style={negrita}>
                                 { prenda ? prenda  : "-Vacio-" }
-                                                                        
-                                </td>
+                              </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
-
             }
         </>
     )
-
 }
 export default Resultado

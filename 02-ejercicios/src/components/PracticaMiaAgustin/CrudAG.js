@@ -157,11 +157,16 @@ const CrudAG = () => {
 
     const renderizadoManual = (idBorrado) => { //hay mejores formas de hacerlo
         setRenderizarManual("");
-       
-        setRopaActual(  objRopaActual ) //reinicia todo el componente 'resultado'
+
+        setPrendaParamElem(""); //esto es al pedo, es para renderizar la columna del medio
+        setPrendaParamApodo("");
+        setPrendaParamOcasion("");
+
+
+        setRopaActual(objRopaActual) //reinicia todo el componente 'resultado'
     }
 
- 
+
 
     return (
         <>
@@ -180,6 +185,7 @@ const CrudAG = () => {
                     <FormularioAG setPrendaParamElem={setPrendaParamElem} setPrendaParamApodo={setPrendaParamApodo}
                         setPrendaParamOcasion={setPrendaParamOcasion}
                         setCualInput={setCualInput}
+                        renderizadoManual={renderizadoManual}
                     />
                     <div className="div-abm" >
                         <Modificar ropaEditar={ropaEditar} renderizadoManual={renderizadoManual} />
@@ -197,8 +203,9 @@ const CrudAG = () => {
                                     &&
                                     elem.apodo.toUpperCase().includes(prendaParamApodo.toUpperCase())
                                     &&
-                                    (prendaParamOcasion ? elem.especial_para.toUpperCase().includes(prendaParamOcasion.toUpperCase()) : "")
-                                ) 
+                                    (prendaParamOcasion && prendaParamOcasion.toLowerCase() != "cualquiera" ? elem.especial_para.toUpperCase().includes(prendaParamOcasion.toUpperCase())
+                                        : elem.especial_para)
+                                )
                                     .map((elemento) => (
                                         <Fila prenda={elemento} ponerseRopa={ponerseRopa} editRopa={editRopa} />
 

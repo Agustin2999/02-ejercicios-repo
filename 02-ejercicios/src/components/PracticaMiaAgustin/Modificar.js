@@ -51,11 +51,20 @@ const formInicial = {
 }
 
 
+
+let noVisible = {
+    // visibility:'Hidden'
+}
+
+
 const Modificar = ({ ropaEditar, renderizadoManual }) => {
 
     const { id, apodo, especial_para, elemento } = ropaEditar;
-    const [formulario, setFormulario] = useState(formInicial)
-    const [textoBoton, setTextoBoton] = useState("Agregar")
+    const [formulario, setFormulario] = useState(formInicial);
+    const [textoBoton, setTextoBoton] = useState("Agregar");
+    const [textoTitulo, setTextoTitulo] = useState("Agregar");
+    const [textoLinkBorrar, setTextoLinkBorrar] = useState("");
+
     let api = helpHttp();
 
     useEffect(() => {
@@ -67,11 +76,17 @@ const Modificar = ({ ropaEditar, renderizadoManual }) => {
         })
         if (id != null & id != "") {
             setTextoBoton("Modificar");
+            setTextoTitulo("Id Prenda: " + formulario.id);
+            setTextoLinkBorrar("Eliminar");
+
         } else {
             setFormulario({
                 ...formulario,
                 id: "..."
             })
+            setTextoTitulo("Agregar");
+            setTextoLinkBorrar("");
+
         }
     }, [id]);
 
@@ -81,6 +96,8 @@ const Modificar = ({ ropaEditar, renderizadoManual }) => {
             id: "..."
         })
         setTextoBoton("Agregar");
+        setTextoTitulo("Agregar");
+        setTextoLinkBorrar("");
     }
 
     const handleReset = (e) => {
@@ -91,33 +108,39 @@ const Modificar = ({ ropaEditar, renderizadoManual }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if( !window.confirm("Si modifica o agrega una prenda, la vestimenta actual volvera a su estado vacio inicial. Desea continuar?")){
+        if (!window.confirm("Si modifica o agrega una prenda, la vestimenta actual volvera a su estado vacio inicial. Desea continuar?")) {
             return;
         }
 
         if (textoBoton == "Agregar") {
             //Aca agregar
             alert("Se agrego")
+            let url = 'http://localhost:5000/vestimenta';
 
+            let options = {
+                headers: { "content-type": "application/json" },
+                body: {
+                    'apodo': formulario.apodo,
+                    'especial_para': formulario.especial_para,
+                    'elemento': formulario.elemento,
+                }
+            }
 
-
-
-//FALTA EL AGREGARRRR 18/10/22
-
-
-
-
-
-
-
-
-
-
-
-
-
+            api.post(url, options).then((res) => {
+                if (!res.err) {
+                    //salio todo bien
+                    alert("Se agrego todo")
+                    renderizadoManual(formulario.id);//es para renderizar el ropero manualmente(que haga de nuevo el get)
+                    limpiar();
+                } else {
+                    alert("Lo sentimos, no se pudo agregar")
+                    //salio todo mal
+                }
+            })
 
         }
+
+
         if (textoBoton == "Modificar") {
             alert("Se modifico")
             let url = 'http://localhost:5000/vestimenta/' + formulario.id;
@@ -126,11 +149,11 @@ const Modificar = ({ ropaEditar, renderizadoManual }) => {
                 headers: { "content-type": "application/json" },
                 body: {
                     'id': formulario.id,
-                    'apodo' : formulario.apodo,
-                    'especial_para' : formulario.especial_para,
+                    'apodo': formulario.apodo,
+                    'especial_para': formulario.especial_para,
                     'elemento': formulario.elemento,
                 }
-            } 
+            }
 
             api.put(url, options).then((res) => {
                 if (!res.err) {
@@ -178,8 +201,8 @@ const Modificar = ({ ropaEditar, renderizadoManual }) => {
 
     const handleEliminar = (e) => {
         e.preventDefault();
-        
-         
+
+
         if (formulario.id >= 0 & window.confirm("Si elimina una prenda, la vestimenta actual volvera a su estado vacio inicial. Desea eliminar '" + formulario.apodo + "' ?")) {
             //Aca eliminar
 
@@ -211,9 +234,11 @@ const Modificar = ({ ropaEditar, renderizadoManual }) => {
 
             <div style={divPadreFS}>
                 <fieldset style={estiloFS}>
-                    <legend>Modificar</legend>
+                    <legend>Agregar/Modificar</legend>
                     <form style={estiloForm} onSubmit={handleSubmit} onReset={handleReset}>
-                        <p id="idPrenda" style={estiloIDPrenda}>Id Prenda: {formulario.id} <a href="#" onClick={handleEliminar} >ELIMINAR</a></p>
+                        <p id="idPrenda" style={estiloIDPrenda}>{textoTitulo}
+                            <a href="#" onClick={handleEliminar} >{textoLinkBorrar}</a>
+                        </p>
                         <label for="apodo">Apodo:</label>
                         <input type="search" id="apodo" name="apodo" onChange={handleChange} value={formulario.apodo} autocomplete="off" />
                         <br /><br />

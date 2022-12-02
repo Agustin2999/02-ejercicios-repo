@@ -1,0 +1,22 @@
+{
+  "response": {
+    "estado": [
+      "San Luis",
+      "Tierra del Fuego",
+      "Chubut",
+      "Formosa"
+    ],
+    "municipios": [
+      "San Luis City",
+      "Tierra del Fuego City",
+      "Chubut City",
+      "Formosa City"
+    ],
+    "colonia": [
+      "San Luis Colonia",
+      "Tierra del Fuego Colonia",
+      "Chubut Colonia",
+      "Formosa Colonia"
+    ]
+  }
+}

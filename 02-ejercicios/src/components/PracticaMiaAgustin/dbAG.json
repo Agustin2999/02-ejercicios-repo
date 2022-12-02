@@ -32,7 +32,7 @@
     },
     {
       "id": 6,
-      "apodo": "Remera del barsa4",
+      "apodo": "Remera del barsa",
       "especial_para": "Deportivo, Diario, Entrecasa",
       "elemento": "Remera"
     },
@@ -50,7 +50,7 @@
     },
     {
       "id": 11,
-      "apodo": "ELIMINAME 11",
+      "apodo": "ELIMINAME 112",
       "especial_para": "BORRAR",
       "elemento": "Campera"
     },
@@ -59,6 +59,12 @@
       "apodo": "ELIMINAME 15",
       "especial_para": "BORRAR",
       "elemento": "Campera"
+    },
+    {
+      "apodo": "Pipe",
+      "especial_para": "Salir, Diario, Fulbo",
+      "elemento": "Pantalon",
+      "id": 16
     }
   ]
 }

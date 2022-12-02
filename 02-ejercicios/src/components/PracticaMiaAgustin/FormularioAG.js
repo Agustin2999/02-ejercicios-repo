@@ -43,7 +43,7 @@ const formInicial = {
 
 
 
-const FormularioAG = ({ setPrendaParamElem, setPrendaParamApodo, setPrendaParamOcasion, setCualInput }) => {
+const FormularioAG = ({ setPrendaParamElem, setPrendaParamApodo, setPrendaParamOcasion, setCualInput, renderizadoManual }) => {
 
     const [formulario, setFormulario] = useState(formInicial)
 
@@ -74,10 +74,10 @@ const FormularioAG = ({ setPrendaParamElem, setPrendaParamApodo, setPrendaParamO
         if (e.target.id == "ocasion") {
             if (e.target.value == "cualquiera") {
                 setPrendaParamOcasion("");
-            }else{
+            } else {
                 setPrendaParamOcasion(e.target.value);
             }
-            
+
             console.log("ocasión: " + e.target.value)
         }
 
@@ -89,7 +89,8 @@ const FormularioAG = ({ setPrendaParamElem, setPrendaParamApodo, setPrendaParamO
     const handleReset = (e) => {
         e.preventDefault();
         setFormulario(formInicial)
-        //ACA TENGO QUE RESETEAR EL setDbRopa PARA QUE SE REINICIE LA BUSQUEDA
+
+        renderizadoManual("");
     }
 
     return (
@@ -98,7 +99,7 @@ const FormularioAG = ({ setPrendaParamElem, setPrendaParamApodo, setPrendaParamO
                 <fieldset style={estiloFS}>
                     <legend>Busqueda</legend>
                     <form style={estiloForm} onSubmit={handleSubmit} onReset={handleReset}>
-                        <p   style={estiloIDPrenda}>Ingrese parámetros</p>
+                        <p style={estiloIDPrenda}>Ingrese parámetros</p>
                         <label for="apodo">Apodo:</label>
                         <input type="search" id="apodo" name="buscarApodo" onChange={handleChange} value={formulario.apodo} autocomplete="off" />
                         <br /><br />
