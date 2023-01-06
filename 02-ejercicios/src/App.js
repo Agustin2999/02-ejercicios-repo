@@ -14,20 +14,18 @@ function App() {
   return (
     <>
       <h1>Ejercicios React</h1>
-      <Modals/>
-      
-      <hr/>
-      <ContactForm/>
-      
-      <hr/>
-      <SelectsAnidados/>
+      <Modals />
+
+      <hr />
+      <ContactForm />
+
+      <hr />
+      <SelectsAnidados />
 
 
-      
+
       <hr />
       <PracticaMiaAgustin />{/*Ejercicio de practica para ver como voy*/}
-
-
 
 
       <hr />

@@ -7,6 +7,8 @@ cd react-router
 
 npm install react-router-dom */
 
+import ConceptosBasicos from "./components/ConceptosBasicos";
+
 
 function App() {
   return (
@@ -14,19 +16,12 @@ function App() {
       <h1>React Router</h1>
       <a href="https://reactrouter.com/en/main" target="_blank" rel="noreferrer">Documentacion</a>
       <hr />
+
+      <ConceptosBasicos/>
     </div>
   );
 }
 
 export default App;
 
-
-
-
-
-
-//https://youtu.be/fQoDUj46pwU?list=PLvq-jIkSeTUZ5XcUw8fJPTBKEHEKPMTKk&t=502
  
-// lastima costa rica que estuvo tan cerrrcaaa pero bue
-
-vamos japon
