@@ -57,6 +57,14 @@ const MenuConceptos = () => {
                     <Link to="/react">React manual casero</Link>
                 </li>
 
+
+                <li>
+                    <span>video 61 Rutas privadas:</span>
+                    <Link to="/login">Login</Link>
+                    <Link to="/dashboard">Dashboard</Link>
+                </li>
+
+
             </ol>
 
 
