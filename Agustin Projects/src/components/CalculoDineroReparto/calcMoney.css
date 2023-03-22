@@ -1,0 +1,327 @@
+* {
+    text-align: center;
+}
+
+
+.dy-bl {
+    display: block;
+}
+
+.similTabla {
+    margin-top: 3rem;
+    display: flex;
+    width: 100%;
+
+    text-align: center;
+    /* grid-template-columns:   repeat(2, 1fr);; */
+
+    justify-content: space-around
+}
+
+
+.labelEditable {
+    font-weight: bold;
+    font-size: 1.5rem;
+    cursor: text;
+}
+
+.similTabla div {
+    /* border: 2px solid black; */
+    width: 35%;
+    height: 2rem;
+}
+
+.input {
+    /* width:23rem; */
+    width: 90%;
+    height: 100%;
+    /* font-size: 0.95rem; */
+    text-transform: capitalize;
+    font-size: 1.2rem;
+
+
+}
+
+
+.inputGasto {
+    margin-left:0.5rem
+}
+
+
+.input:hover {
+
+    border: 0.1rem solid gray;
+    /*border-bottom: 0.5rem solid blue; */
+    background: linear-gradient(to bottom, white 95%, blue 5%);
+}
+
+
+/* .botonMas{ este era el casero
+    font-size: 2.5rem;
+    font-weight: bold;
+    color:white;
+    background-color: black;
+    border-radius: 50%;
+    text-decoration: none;
+    width:3rem;
+    height:3rem;
+    text-align: center;
+    margin:0;
+    padding: 0;
+} */
+
+
+
+
+
+
+.botonBootstrap {
+    font-size: 2.5rem;
+
+    text-decoration: none;
+    width: 3rem;
+    height: 3rem;
+    color: black;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+
+}
+
+
+.botonBootstrap:hover {
+    cursor: pointer;
+    color: #00000090;
+
+}
+
+
+
+.container-input-icono {
+    display: flex;
+    justify-content: center;
+    height: 1.5rem;
+
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    width: 80rem;
+    flex: 5;
+    /*sirve como colspan*/
+
+}
+
+.container-input-icono:nth-child(3),
+.container-input-icono:nth-child(1) {
+
+    flex: 1;
+
+}
+
+
+
+
+
+
+
+/* #eliminarFila{
+     
+    padding: 0  ;
+    margin: 0 ;
+    line-height: 0;
+    display:block;
+    font-size: 2.5rem;
+    vertical-align: middle !important;
+ 
+}
+  */
+
+#eliminarFila::before {
+    margin: 0;
+    padding: 0;
+    vertical-align: inherit;
+
+}
+
+.btnEliminar {
+    height: 100%;
+    width: 1rem
+}
+
+.aContenedorIcono {
+    cursor: pointer;
+
+}
+
+
+
+/* :first-letter primer letra de elemento tengo que poner para mayusculas */
+
+
+
+.divTransaccion {
+    border-radius: 50px;
+
+    margin: 0px auto;
+    width: 60%;
+
+
+
+    /*para alinear verticalmente*/
+    height: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(to right, #222FE6, #7881E6, #222FE6);
+    border: 2px solid #1C26B8;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0px 5px 5px black;
+    padding: 0.3em;
+    overflow-wrap: break-word;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+        /*
+    #0014C4
+    #242C78
+    #0019F7
+    #4B5CF9
+    #000D7A
+        */
+        height :auto  ;
+        overflow-wrap: break-word ;
+
+}
+
+
+
+/* ver fondo de IMAGEN*/
+
+
+.divTransaccion p {
+    color: white;
+    line-height: 2em;
+    margin: initial;
+}
+
+
+
+.input-nombreJuntada {
+    width: 20rem;
+    font-weight: bold;
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid blue;
+    /* background: linear-gradient(to top, blue,transparent,transparent); */
+    background: linear-gradient(360deg, rgba(0, 109, 246, 1) 0%, rgba(30, 120, 236, 1) 1%, rgba(98, 144, 214, 1) 1.5%, transparent);
+    margin-top: 1rem;
+
+}
+
+
+
+
+
+
+
+
+
+.divCEntradisimo {
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+
+.btnCalcular {
+    text-align: center;
+    margin: auto;
+    /* background:transparent; border:none;background: radial-gradient(circle at center,   blue, #0000FF88, transparent   );
+    color:white;
+    font-size: 1.5rem; */
+}
+
+.btnCalcular:hover {
+    background: radial-gradient(circle at center, blue, #0000FF88, transparent);
+    color: white;
+}
+
+
+
+
+
+.aContenedorIcono img:hover {
+    background: radial-gradient(circle at center, blue, #0000FF88, transparent);
+
+}
+
+
+
+ /*
+.divPersonaBorde {
+    border: 1px solid red; 
+ 
+}
+*/
+
+
+
+@media screen and (max-width : 700px) {
+    .divPersonaBorde {
+        display: block  ;
+        height: auto   ;
+        border: 0.1px solid blue;
+        border-radius: 0.5rem;
+
+        background: radial-gradient(circle at center,   transparent, transparent,transparent,#0000FF88);
+    }
+
+    .input {
+        margin:0;
+        height:1.5rem;
+        font-size: medium;
+        margin-top: 0.2rem;
+    }
+
+    .input {
+        height:1.5rem;
+        font-size: medium;
+       
+    }
+
+   .inputGasto{
+        margin-top: 0.2rem;
+        margin-bottom: 0.18rem;
+    }
+
+
+
+
+    .similTabla, .similTabla div{
+        height: auto  ;
+        margin-top: 1em !important;
+    }
+
+
+    .container-input-icono{
+        height :auto  ;
+        margin : 0rem;
+           }
+.input-nombreJuntada {
+    width:  82%;
+     
+}
+.container-input-icono:nth-child(3)  {
+
+     margin-left:0.5rem;
+   
+
+}
+
+
+        
+
+}
+
+ 

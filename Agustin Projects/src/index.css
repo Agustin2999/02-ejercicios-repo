@@ -1,0 +1,15 @@
+#abc{
+  background-color: #fee;
+}
+
+html{
+ box-sizing:border-box;
+ font-size:16px;
+ font-family: sans-serif;
+}
+
+
+*,
+*::before{
+ box-sizing:inherit
+}
