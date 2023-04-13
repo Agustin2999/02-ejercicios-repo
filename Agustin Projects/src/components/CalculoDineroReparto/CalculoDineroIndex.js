@@ -3,7 +3,10 @@ import './calcMoney.css'
 import Persona from './Persona';
 import { useState, useEffect } from 'react';
 import Transaccion from './Transaccion';
+import UrlGSheets from './UrlGSheets';
+import DescargarPDF from '../../helpers/DescargarPDF';
 
+//import { DescargarPDF } from '../../helpers/DescargarPDF';
 
 
 
@@ -58,12 +61,24 @@ const CalculoDineroIndex = () => {
 
     const [transactions, setTransactions] = useState([]);
 
+    const [showInputSheets, setShowInputSheets] = useState(false);
+
+    const [individualSpents, setIndividualSpents] = useState([]);
+
+
+
+
+
+
+
+
+
 
     const handleInputChange = (event, index) => {
 
 
         setTransactions([]); //lo volvemos a 0 si algo cambió
-
+        setIndividualSpents([]);
 
 
         const { name, value } = event.target; //saca el nombre y el valor de la fila actual (el elemento persona)
@@ -71,7 +86,12 @@ const CalculoDineroIndex = () => {
         nuevasFilas[index][name] = value; //del que está modificando(index), le va agregando el valor
         setFilas(nuevasFilas);
     };
+
     const agregarFila = () => {
+        setTransactions([]);
+        setIndividualSpents([]);
+
+
         setFilas(
             [
                 ...filas,
@@ -82,20 +102,25 @@ const CalculoDineroIndex = () => {
 
 
     const eliminarFila = (i) => {
-        if(filas.length>1){ //el array.length de los nombres es > a 1 
+
+        setTransactions([]);
+        setIndividualSpents([]);
+
+
+        if (filas.length > 1) { //el array.length de los nombres es > a 1 
             const nuevasFilas = [...filas].filter(function (elemento, indice) {
                 if (indice != i) {
                     return elemento
                 }
             });
-    
+
             setFilas(nuevasFilas);
-        } else{
+        } else {
             setFilas([
                 { nombre: '', gasto: '' }
-            ] ); //volvemos a 0 
+            ]); //volvemos a 0 
         }
-        
+
     }
 
 
@@ -114,9 +139,18 @@ const CalculoDineroIndex = () => {
 
 
         //limpiamos los que no tengan nombre ni gasto
-        listaObj = listaObj.filter(elem => elem.nombre != "" && elem.gasto > 0);
+        listaObj = listaObj.filter(elem => elem.nombre != "" && elem.gasto >= 0);
         console.log("listaObj")
         console.log(listaObj)
+
+
+
+
+
+
+
+
+
 
 
         //primera parte
@@ -125,6 +159,41 @@ const CalculoDineroIndex = () => {
             return p;
         }, {})
 
+
+        let listaObjSumado = listaObj;//cruda, lo que realmente gastó cada persona
+        console.log("TOTALGASTAOD")
+        console.log(listaObjSumado)
+
+        //{agustin:1, lucas:0}
+
+
+
+        async function procesarObjeto() {
+
+            listaObjSumado = Object.entries(listaObjSumado).map(([key, value]) => ({ nombre: key, gasto: value }));
+
+            let listaObjSumado2 = [];
+
+            await listaObjSumado.map((e) => {
+                listaObjSumado2.push({
+                    nombre: e.nombre,
+                    gasto: e.gasto
+                });
+            });
+
+            await setIndividualSpents(listaObjSumado2);
+        }
+
+        procesarObjeto();
+
+
+
+
+
+
+
+
+
         const resultado = Object.keys(listaObj).map(e => { // <-- después transformamos el formato
             const o = {};
             o.nombre = e;
@@ -132,6 +201,8 @@ const CalculoDineroIndex = () => {
             return o;
         })
         listaObj = resultado;
+
+
 
 
 
@@ -180,13 +251,18 @@ const CalculoDineroIndex = () => {
 
                         var totalPagado = diferenciaDisponible - diferenciaExtra;
                         console.log(personaMenor.nombre + " le paga a " + personaMayor.nombre + " la suma de: " + totalPagado)
+
+
+
+
                         arrayTransacciones.push(
                             // new transacciones(personaMenor.nombre, personaMayor.nombre, totalPagado)
                             //probamos hacerlo sin POO
                             {
                                 sender: personaMenor.nombre,
                                 receiver: personaMayor.nombre,
-                                diference: totalPagado
+                                difference: totalPagado
+
                             }
                         )
                     }
@@ -214,16 +290,27 @@ const CalculoDineroIndex = () => {
 
 
 
-//nombre de la juntada texto editable
+    //nombre de la juntada texto editable
     const [nombreJuntada, setNombreJuntada] = useState('');
 
     const handleKeyDown = (event) => {
-      if (event.keyCode === 13) {
-        event.preventDefault();
-      }
+        if (event.keyCode === 13) {
+            event.preventDefault();
+        }
     };
 
 
+
+    const handleShowInputSheets = () => {
+        setShowInputSheets(!showInputSheets)
+
+    }
+
+
+
+    const descargarPDF = () => {
+        alert("descargando pdf")
+    }
 
 
 
@@ -231,27 +318,53 @@ const CalculoDineroIndex = () => {
 
     return (
         <>
-            <h2>Calculo De Money</h2>
+            <h2>Reparto de dinero</h2>
+
             {/* <h4 className="dy-bl ">Nombre de la juntada:</h4> */}
             {/* <label className="labelEditable" contentEditable="true" >Escriba nombre de la juntada</label> */}
             {/*  */}
 
-             
-                <input
-                    className="input-nombreJuntada"
-                    value={nombreJuntada}
-                    maxlength="40"
-                    onChange={(event) => setNombreJuntada(event.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Escriba nombre de la juntada"
-                     
-                     
-                />
-           
+
+            <input
+                className="input-nombreJuntada"
+                value={nombreJuntada}
+                maxlength="40"
+                onChange={(event) => setNombreJuntada(event.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Escriba nombre de la juntada"
+
+
+            />
+
+            <br />
+            <br />
+            <div div className="containerGSheets" >
+                <a className="aUrlSheets" onClick={handleShowInputSheets}>ingresar link de google sheet</a>
+                {/* <span>🔽</span> */}
 
 
 
+                {
+                    showInputSheets ?
+                        (<></>)
+                        :
+                        (<a onClick={handleShowInputSheets}>
+                            <img className="imageButton" src="https://cdn-icons-png.flaticon.com/128/6590/6590944.png" width="20rem" />
+                        </a>)
+                }
 
+
+                <br />
+
+
+                {
+                    showInputSheets ?
+                        (<UrlGSheets setFilas={setFilas} handleShowInputSheets={handleShowInputSheets} />) :
+                        ("")
+                }
+
+
+            </div>
 
 
             {/* {personas.length > 0 ?
@@ -268,8 +381,8 @@ const CalculoDineroIndex = () => {
 
             <br />
 
-           
-  
+
+
 
             <a className="aContenedorIcono" onClick={agregarFila}>
                 {/* <img src="https://w7.pngwing.com/pngs/535/334/png-transparent-computer-icons-add-button-logo-number-add-button-thumbnail.png" width="35rem" /> */}
@@ -279,13 +392,13 @@ const CalculoDineroIndex = () => {
 
             {/* <button className="botonMas" onClick={agregarFila}>+</button> */}
 
-<br/>
-<br/>
+            <br />
+            <br />
             <button className="btnCalcular" onClick={calcularReparto}>Calcular</button>
-          
 
-             
-            
+
+
+
 
 
 
@@ -299,7 +412,29 @@ const CalculoDineroIndex = () => {
                 <p>&nbsp;</p>
             )}
 
+            <hr /> <hr /> <hr /> <hr />
+            {individualSpents.length > 0 ? (
+                individualSpents.map((item) =>  
+                 <div>
+                <p>{item.nombre} __ {item.gasto}</p>
+                 limite de 28 como el 128
+                 </div>
+             )
+            ) : (
+                <p>&nbsp;</p>
+            )}
+            <hr /> <hr /> <hr /> <hr />
 
+
+
+            <button onClick={descargarPDF}>Descargar PDF</button>
+
+
+            <hr />
+            <hr />
+            <hr />
+            <hr />
+            <DescargarPDF transactions={transactions} nameParty={nombreJuntada} />
 
 
 
@@ -314,3 +449,16 @@ export default CalculoDineroIndex;
 
 
 //ponerle color de paleta de colores elegida en internet
+
+
+
+/*
+6/4/23
+despues de intentar hacer npm fix audit qsy algo asi ayer, que me tiraba 7 vulnerabilidades antes, luego de hacer el fix me tiro como 42, seña de que se rompio todo creo
+busque una pag en internet y me dijo que volviera a descargar el package json y el package json lock, lo hice. tambien
+decia borrar la carpeta node_modules. lo hice. despues npm install. 
+y ahora volvi a las 7 vulnerabilidades yupii creo que se soluciono xd
+tambien tuve que borrar cache npm
+
+
+*/ 

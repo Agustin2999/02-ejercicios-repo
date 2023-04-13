@@ -2,6 +2,9 @@
     text-align: center;
 }
 
+button{
+    margin:0; /*es para normalizar agregado 4/4/23*/
+}
 
 .dy-bl {
     display: block;
@@ -266,8 +269,112 @@
 */
 
 
+.aUrlSheets{
+    color:blue;
+     
+    margin-top: 1rem;
+    cursor: pointer;
+    
+     
+}
 
-@media screen and (max-width : 700px) {
+
+
+
+.inputsSheets{
+    width: 40%;
+}
+
+
+
+.imgReverse{
+    transform: scaleY(-1);
+}
+
+
+.imageButton{
+    cursor:pointer;
+     
+}
+
+.imageButton:hover{
+     
+    filter: opacity(0.4) drop-shadow(0 0 0 blue); 
+     
+}
+
+
+.containerGSheets{
+    background-color: #0000ff10;
+    padding:0.5rem;
+    border-radius: 2rem;
+    background: linear-gradient(to top, #0000ff10,#0000ff10,#0000ff10,  transparent );
+}
+
+
+
+.buscarGSheet{
+    margin:0;
+}
+
+
+
+
+
+
+
+
+
+.divFactura{
+    background-color: white;
+
+    /*para que tenga tamaño de a4*/
+    width: 793.70px;
+    height: 1122.52px;
+    background-color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:1.1rem;
+     
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.imgIconoDesc{
+    margin-bottom: 40px;
+}
+
+
+
+
+.h3SubtDesc{
+    margin-bottom:20px;
+
+}
+
+
+
+
+
+
+
+
+
+
+@media screen and (max-width : 660px) {
     .divPersonaBorde {
         display: block  ;
         height: auto   ;
@@ -308,20 +415,46 @@
         height :auto  ;
         margin : 0rem;
            }
-.input-nombreJuntada {
-    width:  82%;
-     
-}
-.container-input-icono:nth-child(3)  {
+    .input-nombreJuntada {
+        width:  82%;
+        
+    }
+    .container-input-icono:nth-child(3)  {
 
-     margin-left:0.5rem;
-   
+        margin-left:0.5rem;
+    }
 
-}
+    .aContenedorIcono img:hover  {
+        background:none;
+    }
+
+    .btnCalcular:hover{
+        background:#eee;
+        color:#444
+    }
 
 
         
+    .input:hover {
 
+        border: 0.1rem solid gray;
+        
+        background:  white ;
+    }
+
+    .divTransaccion{
+        width:100%
+    }
+
+    body{
+        padding:2rem
+    }
+
+
+
+    .inputsSheets{
+        width: 45%;
+    }
 }
 
  
