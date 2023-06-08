@@ -2,8 +2,9 @@
     text-align: center;
 }
 
-button{
-    margin:0; /*es para normalizar agregado 4/4/23*/
+button {
+    margin: 0;
+    /*es para normalizar agregado 4/4/23*/
 }
 
 .dy-bl {
@@ -47,7 +48,7 @@ button{
 
 
 .inputGasto {
-    margin-left:0.5rem
+    margin-left: 0.5rem
 }
 
 
@@ -104,21 +105,17 @@ button{
     display: flex;
     justify-content: center;
     height: 1.5rem;
-
     align-items: center;
     margin: 0;
     padding: 0;
     width: 80rem;
     flex: 5;
     /*sirve como colspan*/
-
 }
 
 .container-input-icono:nth-child(3),
 .container-input-icono:nth-child(1) {
-
     flex: 1;
-
 }
 
 
@@ -185,15 +182,15 @@ button{
     overflow-wrap: break-word;
     margin-top: 2rem;
     margin-bottom: 2rem;
-        /*
+    /*
     #0014C4
     #242C78
     #0019F7
     #4B5CF9
     #000D7A
         */
-        height :auto  ;
-        overflow-wrap: break-word ;
+    height: auto;
+    overflow-wrap: break-word;
 
 }
 
@@ -237,7 +234,7 @@ button{
 }
 
 
-.btnCalcular {
+.btn4c {
     text-align: center;
     margin: auto;
     /* background:transparent; border:none;background: radial-gradient(circle at center,   blue, #0000FF88, transparent   );
@@ -245,7 +242,7 @@ button{
     font-size: 1.5rem; */
 }
 
-.btnCalcular:hover {
+.btn4c:hover {
     background: radial-gradient(circle at center, blue, #0000FF88, transparent);
     color: white;
 }
@@ -261,7 +258,7 @@ button{
 
 
 
- /*
+/*
 .divPersonaBorde {
     border: 1px solid red; 
  
@@ -269,52 +266,52 @@ button{
 */
 
 
-.aUrlSheets{
-    color:blue;
-     
+.aUrlSheets {
+    color: blue;
+
     margin-top: 1rem;
     cursor: pointer;
-    
-     
+
+
 }
 
 
 
 
-.inputsSheets{
+.inputsSheets {
     width: 40%;
 }
 
 
 
-.imgReverse{
+.imgReverse {
     transform: scaleY(-1);
 }
 
 
-.imageButton{
-    cursor:pointer;
-     
+.imageButton {
+    cursor: pointer;
+
 }
 
-.imageButton:hover{
-     
-    filter: opacity(0.4) drop-shadow(0 0 0 blue); 
-     
+.imageButton:hover {
+
+    filter: opacity(0.4) drop-shadow(0 0 0 blue);
+
 }
 
 
-.containerGSheets{
+.containerGSheets {
     background-color: #0000ff10;
-    padding:0.5rem;
+    padding: 0.5rem;
     border-radius: 2rem;
-    background: linear-gradient(to top, #0000ff10,#0000ff10,#0000ff10,  transparent );
+    background: linear-gradient(to top, #0000ff10, #0000ff10, #0000ff10, transparent);
 }
 
 
 
-.buscarGSheet{
-    margin:0;
+.buscarGSheet {
+    margin: 0;
 }
 
 
@@ -325,7 +322,7 @@ button{
 
 
 
-.divFactura{
+.divFactura {
     background-color: white;
 
     /*para que tenga tamaño de a4*/
@@ -335,10 +332,10 @@ button{
     padding: 20px;
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
-    font-size:1.1rem;
-     
+    font-size: 1.1rem;
 
-
+    position: relative;
+    text-align: center
 }
 
 
@@ -353,16 +350,64 @@ button{
 
 
 
-.imgIconoDesc{
+.imgIconoDesc {
     margin-bottom: 40px;
+    display: inline-block;
 }
 
 
 
 
-.h3SubtDesc{
-    margin-bottom:20px;
+.h3SubtDesc {
+    margin-bottom: 20px;
 
+}
+
+
+
+.btnReset {
+    margin-top: 1.5rem;
+    margin-bottom: 0rem;
+}
+
+
+
+
+
+
+.lastRowReport {
+    border-top: 1px solid black;
+}
+
+.lastRowReport td {
+    padding: 0.3rem;
+}
+
+
+.tablaReporte {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1rem
+}
+
+.headerRowReport {
+    border-bottom: 2px solid black;
+
+}
+
+
+
+
+.divAllSpentsReport {
+
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    color: #00000099;
+    font-size: 0.7em;
+    padding: 0 2rem
 }
 
 
@@ -372,32 +417,50 @@ button{
 
 
 
+.footerReporte {
+    position: absolute;
+    text-align: center;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+}
+
+
+
+.colorBlue {
+    color: blue
+}
+
+
+.dy-nn {
+    display: none
+}
 
 
 @media screen and (max-width : 660px) {
     .divPersonaBorde {
-        display: block  ;
-        height: auto   ;
+        display: block;
+        height: auto;
         border: 0.1px solid blue;
         border-radius: 0.5rem;
 
-        background: radial-gradient(circle at center,   transparent, transparent,transparent,#0000FF88);
+        background: radial-gradient(circle at center, transparent, transparent, transparent, #0000FF88);
     }
 
     .input {
-        margin:0;
-        height:1.5rem;
+        margin: 0;
+        height: 1.5rem;
         font-size: medium;
         margin-top: 0.2rem;
     }
 
     .input {
-        height:1.5rem;
+        height: 1.5rem;
         font-size: medium;
-       
+
     }
 
-   .inputGasto{
+    .inputGasto {
         margin-top: 0.2rem;
         margin-bottom: 0.18rem;
     }
@@ -405,56 +468,57 @@ button{
 
 
 
-    .similTabla, .similTabla div{
-        height: auto  ;
+    .similTabla,
+    .similTabla div {
+        height: auto;
         margin-top: 1em !important;
     }
 
 
-    .container-input-icono{
-        height :auto  ;
-        margin : 0rem;
-           }
+    .container-input-icono {
+        height: auto;
+        margin: 0rem;
+    }
+
     .input-nombreJuntada {
-        width:  82%;
-        
-    }
-    .container-input-icono:nth-child(3)  {
+        width: 82%;
 
-        margin-left:0.5rem;
     }
 
-    .aContenedorIcono img:hover  {
-        background:none;
+    .container-input-icono:nth-child(3) {
+
+        margin-left: 0.5rem;
     }
 
-    .btnCalcular:hover{
-        background:#eee;
-        color:#444
+    .aContenedorIcono img:hover {
+        background: none;
+    }
+
+    .btn4c:hover {
+        background: #eee;
+        color: #444
     }
 
 
-        
+
     .input:hover {
 
         border: 0.1rem solid gray;
-        
-        background:  white ;
+
+        background: white;
     }
 
-    .divTransaccion{
-        width:100%
+    .divTransaccion {
+        width: 100%
     }
 
-    body{
-        padding:2rem
+    body {
+        padding: 2rem
     }
 
 
 
-    .inputsSheets{
+    .inputsSheets {
         width: 45%;
     }
 }
-
- 

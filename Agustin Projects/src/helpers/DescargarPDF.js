@@ -2,217 +2,140 @@
 //npm install html-to-image
 //import htmlToImage from 'html-to-image';
 
-
-
-//var doc = new jsPDF();
-
-
-/*En este ejemplo, el componente TextImage recibe un prop text que contiene el 
+/*
+En este ejemplo, el componente TextImage recibe un prop text que contiene el 
 texto que se va a convertir en imagen. Cuando se hace clic en el botón "Generate image",
- se llama a la función htmlToImage.toPng que toma como parámetro el elemento div que 
- contiene el texto (this.textRef.current) y devuelve una promesa que resuelve en la URL
-  de la imagen generada. Finalmente, se muestra la imagen en el componente si la URL 
-  está disponible en el estado.
+se llama a la función htmlToImage.toPng que toma como parámetro el elemento div que 
+contiene el texto (this.textRef.current) y devuelve una promesa que resuelve en la URL
+de la imagen generada. Finalmente, se muestra la imagen en el componente si la URL 
+está disponible en el estado.
  
 Ten en cuenta que la generación de imágenes puede ser una tarea costosa en términos de 
 recursos, por lo que es posible que desees considerar el uso de esta técnica sólo cuando 
-sea necesario y no en cada renderizado del componente.*/
-
-// class TextImage extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.textRef = React.createRef();
-//     this.state = {
-//       imageUrl: null,
-//     };
-//   }
-
-
-
-
-
-// }
-
-
-
-
-
-
+sea necesario y no en cada renderizado del componente.
+*/
 
 import React, { useRef } from 'react';
 import { toPng } from 'html-to-image';
- 
+import imgIco from '../images/iconoBusiness (1).jpeg'
+import { useState } from 'react';
+import '../components/CalculoDineroReparto/calcMoney.css'
 
 
- 
+const DescargarPDF = ({ transactions, nameParty, individualSpents }) => {
 
-const DescargarPDF = ({ transactions, nameParty }) => {
   const miDivRef = useRef(null);
+  const [divOcultar, setDivOcultar] = useState('hidden'); // '' para desarrollo
+  const [divOcultarMargin, setDivOcultarMargin] = useState('0');
+  const [divOcultarSize, setDivOcultarSize] = useState('0px');//'' para desarrollo
+  const [horaActual, setHoraActual] = useState('');
 
-  function handleClick() {
-  
-    toPng(miDivRef.current )
-        .then(function (dataUrl) {
-        
+  let limitMovements = 24;
+
+  async function handleClick() {
+
+    //rapidamente abrimos el div para poder hacer la captura,despues lo cerramos antes de que termine esta funcion
+    await setDivOcultar('')
+    await setDivOcultarMargin('8000px')
+    await setDivOcultarSize('')
+
+
+    const ahora = new Date();
+    const offset = -3; // UTC-3 para Argentina
+    const utc = ahora.getTime() + (ahora.getTimezoneOffset() * 60000);
+    const horaArgentina = new Date(utc + (3600000 * offset));
+    let mes = horaArgentina.getMonth() + 1;
+    let dia = horaArgentina.getDate();
+    let year = horaArgentina.getFullYear();
+    let hora = horaArgentina.getHours().toString().padStart(2, '0');
+    let minutos = horaArgentina.getMinutes().toString().padStart(2, '0');
+    //    console.log(dia, mes, year, hora, minutos);
+    let mesName;
+    switch (mes) {
+      case 1:
+        mesName = 'Enero'
+        break;
+      case 2:
+        mesName = 'Febrero'
+        break;
+      case 3:
+        mesName = 'Marzo'
+        break;
+      case 4:
+        mesName = 'Abril'
+        break;
+      case 5:
+        mesName = 'Mayo'
+        break;
+      case 6:
+        mesName = 'Junio'
+        break;
+      case 7:
+        mesName = 'Julio'
+        break;
+      case 8:
+        mesName = 'Agosto'
+        break;
+      case 9:
+        mesName = 'Septiembre'
+        break;
+      case 10:
+        mesName = 'Octubre'
+        break;
+      case 11:
+        mesName = 'Noviembre'
+        break;
+      case 12:
+        mesName = 'Diciembre'
+        break;
+    }
+
+
+    await setHoraActual(dia + " de " + mesName + " de " + year + " " + hora + ":" + minutos + "hs");
+
+
+    await toPng(miDivRef.current)
+      .then(function (dataUrl) {
+        'hidden'
         // console.log("link de la imagen")
         // console.log(dataUrl)
         const link = document.createElement('a');
-        link.download = 'mi-imagen.png';
+
+        link.download = dia + "-" + mes + "-" + year + "-RepDin4c" + ".png";//'mi-imagen.png';
         link.href = dataUrl;
         link.click();
-
       })
       .catch(function (error) {
         console.error('No se pudo generar la imagen', error);
       });
 
-
- 
- 
+    await setDivOcultarMargin('0')
+    await setDivOcultar('hidden') //volvemos a poner hidden
+    await setDivOcultarSize('0px')
   }
 
+  //const buttonRef = useRef(null); 25/4/23
+
   return (
-    <div >
-      <div ref={miDivRef} id="miDiv" className="divFactura" style={{ position: "relative", textAlign: 'center' }}>
-        {/* <h1>Hola mundo</h1>
-        <p>Este es un ejemplo de cómo usar html-to-image en React.js</p>
 
-        {transactions.length > 0 ? (
-                transactions.map((item) =>
-                                <p>
-                    <strong>{item.sender[0].toUpperCase() + item.sender.substring(1)}</strong>    le debe a   <strong>{item.receiver[0].toUpperCase() + item.receiver.substring(1)}</strong>   la cantidad de  $<strong>
-                    {
-                        item.difference ? (Number(item.difference.toFixed(2)) ):("")
-                                        }
-                    </strong></p>
-                )
-            ) : (
-                <p>&nbsp;</p>
-            )}
-             */}
+    <div style={{ visibility: divOcultar, marginLeft: divOcultarMargin }}>
 
+      <div ref={miDivRef} id="miDiv" className="divFactura" style={{ height: divOcultarSize, width: divOcultarSize }}>
+        <img className=" imgIconoDesc" src={imgIco} width="120px" />
 
+        {/* replace " "   solamente reemplaza 1 espacio vacio, si hay dos consecutivos no lo hace. por eso puse esa expresion regular aca abajo */}
+        <h3 className="h3SubtDesc">
+          {(nameParty && nameParty.replace(/\s+/g, '') != "") ? (<span><strong>{nameParty.toUpperCase()}</strong> - </span>) : ("")}
+          Reparto de Dinero
+        </h3>
 
+        <p><em>{horaActual}</em></p>
 
-
-
-
-        <img className=" imgIconoDesc" src="https://phantom-marca.unidadeditorial.es/8ba7df9bad2805e1407d66ba7b4a6ae8/resize/1320/f/jpg/assets/multimedia/imagenes/2021/03/25/16166609108537.jpg" width="120px" style={{ display: 'inline-block' }} />
-
-        <h3 className="h3SubtDesc">Reparto de Dinero</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <p><strong>{nameParty.toUpperCase()}</strong></p>
-
-        <p><em>10 de Marzo de 2023 20:50hs</em></p>
-
-
-
-
-        <table style={{ width: '100%', textAlign: 'center' ,marginTop:'20px'  }}>
+        <table className="tablaReporte">
           <thead>
-            <tr style={{ borderBottom: '2px solid black' }}>
+            <tr className="headerRowReport">
               <th>Movimiento</th>
               <th>Deudor</th>
-              <th>Gastó</th>
               <th>Le debe a</th>
               <th>La cantidad de</th>
             </tr>
@@ -225,76 +148,81 @@ const DescargarPDF = ({ transactions, nameParty }) => {
               <td>$300</td>
             </tr>  */}
 
-
             {transactions.length > 0 ? (
-              transactions.map((item,indexDefault) =>
-                <>
-                <tr>
-                  <td>{indexDefault+1}</td>
-                  <td>{item.sender[0].toUpperCase() + item.sender.substring(1)}</td>
-                  <td>{item.receiver[0].toUpperCase() + item.receiver.substring(1)}</td>
-                  
-                 
-                  
-                  <td>
-                    {
-                      item.difference ? "$" + (Number(item.difference.toFixed(2))) : ("$0")
-                    }</td>
-                </tr>
-                </>
+              transactions.map((item, indexDefault) =>
+                indexDefault < limitMovements ?
+                  (
+                    <React.Fragment key={item.sender.charAt(0) + item.receiver.charAt(0) + item.difference.toString()}>
+                      {/* tuve que agregar el fragment a la antigua para poder ponerle key y que no me tire error */}
+                      <tr >
+                         
+                        <td>{indexDefault + 1}</td>
+                        <td>{item.sender[0].toUpperCase() + item.sender.substring(1)}</td>
+                        <td>{item.receiver[0].toUpperCase() + item.receiver.substring(1)}</td>
+                        <td>
+                          {
+                            item.difference ? "$" + (Number(item.difference.toFixed(2))) : ("$0")
+                          }</td>
+                      </tr>
+                    </React.Fragment>
+                  )
+                  :
+                  ("") //si es mayor a 25
               )
             ) : (
-              <p>&nbsp;</p>
+              <></>
             )}
 
-
-
-
-
-
+            <tr className="lastRowReport">
+              <td colSpan="4"><strong>Total gastado:</strong> &nbsp;
+                $
+                {
+                  individualSpents.reduce((valorAcumulado, item) => valorAcumulado + item.gasto, 0)
+                }
+              </td>
+            </tr>
           </tbody>
-
         </table>
 
 
 
+        <div className='divAllSpentsReport'>
+          {individualSpents.length > 0 ?
+            (
+              <>
+                {transactions.length > limitMovements &&
+                  <p>Aviso: El reporte no puede imprimir mas de {limitMovements} movimientos.
+                    Quedaron excluidos {transactions.length - limitMovements} movimientos.</p>
+                  //el && es como el if ternario digamos, lo vi en un video del profe justo me acorde
+                }
+                {
+                  individualSpents.map((item) =>
+                    <span key={item.nombre.charAt(0) + item.gasto.toString()} >{item.nombre}: {item.gasto}.&nbsp;</span>
+                  )
+                }
+              </>
+            ) : (
+              <span>&nbsp;</span>
+            )}
+        </div>
 
-
-
-
-        <p style={{ position: "absolute", textAlign: 'center', bottom: "20px", left: '0', right: '0' }}>
+        <p className="footerReporte">
           {/* ,marginLeft: '285px' */}
-          -Desarrollado por AC-
+          - Desarrollado por 4C. <a href="https://agustin2999.github.io/"
+            className="colorBlue" target="_blank">agustin2999.github.io/</a>
+          &nbsp;-
         </p>
 
-
-      </div>
-      <button onClick={handleClick}>Generar imagen</button>
+      </div> {/*div factura*/}
 
 
-
+      <button id="btnDescargarRep" onClick={handleClick} className="dy-nn">
+        Generar imagen</button>
+      {/* ref={buttonRef}  */}
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   );
 }
-
-
 
 
 export default DescargarPDF;
@@ -327,10 +255,6 @@ export default DescargarPDF;
 
 
 
-
-
-
-//ACA ME QUEDE NI SI QUIERA LO PROBE
 
 //5/4/23
 /*

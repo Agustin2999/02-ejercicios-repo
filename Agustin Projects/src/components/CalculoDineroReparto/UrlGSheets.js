@@ -1,10 +1,9 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { helpGetGSheets } from '../../helpers/helpGetGSheets';
 
-
-const UrlGSheets = ({ setFilas,handleShowInputSheets }) => {
-
+ 
+const UrlGSheets = ({ setFilasGastos, handleShowInputSheets, setTransactions }) => {
 
     const [form, setForm] = useState({
         urlSheets: "",
@@ -13,24 +12,20 @@ const UrlGSheets = ({ setFilas,handleShowInputSheets }) => {
         colSpendings: ""
     });
 
-
-
+    
     const handleChangeInput = (e) => {
-
         e.preventDefault();
         setForm({
             ...form,
             [e.target.id]: e.target.value
         })
-
-
     }
 
 
-
-
-
     const handleSubmitGetData = () => {
+
+        setTransactions([]);
+
         // extraer id:
         var resultadoIdLink = "";
 
@@ -39,6 +34,7 @@ const UrlGSheets = ({ setFilas,handleShowInputSheets }) => {
         var indice = link.search("spreadsheets");
         var indice2 = link.search("/edit");
 
+        //-1 cuando no encuentra coincidencia
         if (indice == -1) {
             indice = 0;
         } else {
@@ -50,14 +46,7 @@ const UrlGSheets = ({ setFilas,handleShowInputSheets }) => {
         }
 
 
-
         resultadoIdLink = link.substring(indice, indice2);
-
-
-
-        alert("buscado. Fijate en el console.log")
-
-
 
         //console.log(apiGSheets)//[{name: 'Garcia', spending: 30}]
 
@@ -65,18 +54,16 @@ const UrlGSheets = ({ setFilas,handleShowInputSheets }) => {
 
         async function asincronia() {
 
-            //test
+            //para probar/test
             const apiGSheetsTest = await helpGetGSheets("1iYd50f5Ools3AvBPZmFR77WQ3xEh05hTXKDPRMD6mpc", "user-data", "Last name", "gaston");
+            
+
             let apiGSheets;
-            if (form.nameSheets.toLowerCase() == 'admin') {
+            if (form.nameSheets.toLowerCase() == 'admin') {//para probar/test
                 apiGSheets = apiGSheetsTest;
             } else {
                 apiGSheets = await helpGetGSheets(resultadoIdLink, form.nameSheets, form.colNames, form.colSpendings);
             }
-
-
-
-
 
 
             await apiGSheets; // Esperar a que se resuelva la promesa
@@ -87,25 +74,12 @@ const UrlGSheets = ({ setFilas,handleShowInputSheets }) => {
                 })
             });
 
-
-            setFilas(
+            setFilasGastos(
                 arrayFilas
             );
         }
-
         asincronia();
-
-
-
-
-
-
     }
-
-
-
-
-
 
 
 
@@ -114,21 +88,24 @@ const UrlGSheets = ({ setFilas,handleShowInputSheets }) => {
             <br />
             <input className="inputsSheets" placeholder={"Link de G-Sheets"} autoComplete="off"
                 id="urlSheets" onChange={handleChangeInput} name="urlSheets" value={form.urlSheets} />
-
-
             <input className="inputsSheets" placeholder={"Nombre de archivo"} autoComplete="off"
                 id="nameSheets" onChange={handleChangeInput} name="nameSheets" value={form.nameSheets} />
+            
             <input className="inputsSheets" placeholder={"Titulo col nombres"} autoComplete="off"
                 id="colNames" onChange={handleChangeInput} name="colNames" value={form.colNames} />
             <input className="inputsSheets" placeholder={"Titulo col gastos"} autoComplete="off"
                 id="colSpendings" onChange={handleChangeInput} name="colSpendings" value={form.colSpendings} />
 
-            <br /><br />
-            <button className="buscarGSheet" onClick={handleSubmitGetData}>Buscar</button>
-<br/>
-                    <a onClick={handleShowInputSheets}>
-                            <img className="imgReverse imageButton" src="https://cdn-icons-png.flaticon.com/128/6590/6590944.png" width="20rem" />
-                        </a>
+            <br />
+            <br />
+
+            <button className="buscarGSheet btn4c" onClick={handleSubmitGetData}>Buscar</button>
+
+            <br />
+            
+            <a onClick={handleShowInputSheets}>
+                <img className="imgReverse imageButton" src="https://cdn-icons-png.flaticon.com/128/6590/6590944.png" width="20rem" />
+            </a>
         </ >
     )
 }

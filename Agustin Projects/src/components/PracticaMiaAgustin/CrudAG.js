@@ -1,5 +1,14 @@
-//npm run dbAG-api para levantar el json server 
-//http://localhost:5000/vestimenta
+//Esta es la copia a partir del 9/5/23 para hacer con localstorage sin romper el otro
+
+
+
+
+
+
+
+
+
+
 
 import React, { useEffect, useState } from 'react';
 import { helpHttp } from '../../helpers/helpHttp.js'; //entre llaves porque no esta exportada por defecto
@@ -42,88 +51,155 @@ const CrudAG = () => {
 
     let api = helpHttp();
     let url = 'http://localhost:5000/vestimenta';
+    let globalPrimeraCarga = true;
+
+
+
+
+
+
+
 
     useEffect(() => {
-        setSpinner(true)
-        api.get(url).then((res) => {
-            console.log("lo que trae")
-            console.log(res)
-            if (!res.err) {
-                setDbRopa(res.sort(function () { return Math.random() - 0.5 }))
-                setError(null)
-                //salio todo bien
+        async function fetchData() {
+            let arrayComoCadena = await localStorage.getItem('clothes');
+
+            //console.log("ARRAY COMO CADENA");
+            //console.log(arrayComoCadena);
+
+            if (!arrayComoCadena || arrayComoCadena == null || arrayComoCadena.length == 0) {
+                // no existe el elemento localstorage clothes
+                await setDbRopa([
+                    {
+                        "id": 1,
+                        "apodo": "Jean negro corte chino",
+                        "especial_para": "Vestir",
+                        "elemento": "Pantalon"
+                    }, {
+                        "id": 2,
+                        "apodo": "Pantalon rojo de river",
+                        "especial_para": "Diario, Deportivo, Entrecasa",
+                        "elemento": "Pantalon"
+                    }, {
+                        "id": 3,
+                        "apodo": "Buzo gris adidas cuello enorme",
+                        "especial_para": "Entrecasa, Diario",
+                        "elemento": "Buzo"
+                    }]);
+                //alert("ENTRO AL IF");
+                //await localStorageTest()
+                //NO SE SI HACE FALTA LOCALSTORAGETEST 24/5/23
             } else {
-                setDbRopa(null);
-                setError(res)
-                //salio todo mal
+                let localdb = await JSON.parse(arrayComoCadena);
+                //console.log("LOCALDBSTORAGE");
+                //console.log(localdb);
+                await setDbRopa(localdb);
+                //alert("no AL IF");
+                //await localStorageTest()
             }
-            setSpinner(false)
-        })
-
-    }, [renderizarManual]);//significa que unicamente se ejecuta la primera vez
 
 
+        }
 
-    // const createData = (data) => { //aca va a llegar form desde CrudForm
-    //       data.id = Date.now(); //creamos un id que es la fecha. se guarda en milisegundos
-    //     let options = {
-    //           body: data,
-    //           headers: {
-    //              "content-type": "application/json" //content type es el formato en el que espero recibir la data
-    //          }
-    //   }
+        fetchData();
 
-    //     api.post(url, options).then((res) => {
-    //         console.log(res)
-    //         if (!res.err) {
-    //             setDb([...db, res])//db es un array, entonces con esto pisamos su valor. res trae todo lo cargado en el post
+    }, []);
+    //^DESCOMENTAR. 
+    //De esta forma, la función fetchData() se ejecutará de manera asíncrona y se utilizará el await para esperar a que la promesa que devuelve localStorage.getItem se resuelva antes de continuar con el código
+
+
+
+
+    // useEffect(() => {
+    //     //if(!globalPrimeraCarga){
+    //         setTimeout(() => {
+    //             setSpinner(true)
     //             setError(null)
-    //         } else {
-    //             setError(res)
-    //         }
-    //     })
-    // };
-
-    // const updateData = (data) => { //data es los valores de los input texts
-    //     let endpoint = url + "/" + data.id; //json server tiene eso de que si le pasas el id de algun objeto, te muestra ese objeto solo. sirve para actualizar y borrar  
-    //     let options = {
-    //         body: data,
-    //         headers: { "content-type": "application/json" },
-    //     }
-    //     api.put(endpoint, options)
-    //         .then((res) => {
-    //             if (!res.err) {
-    //                 let newData = db.map(el => el.id === data.id ? data : el); //esto hace lo mismo que la version no fetch. No se bien porque y si es necesario pero bueno. lo que hace es editar el registro y despues mostrarlo en la grilla ya actualizado 
-    //                 setDb(newData); //la razon de este y del renglon de arriba es evitar hacer otro get. direcetamente lo hacemos localmente
-    //             } else {
-    //                 setError(res);
-    //             }
-    //         })
-
-    // };
+    //             localStorageTest()
+    //             alert("creado en localstorage")
+    //         }, 500);
 
 
-    // const deleteData = (id) => {
-    //     let isDelete = window.confirm(`¿Estás seguro de eliminar el registro con el id '${id}'?`);
-    //     //ponemos window porque si no tira error, no lo encuentra react dentro de sus funciones. (dice que pasa con alert y algunas mas)
-    //     if (isDelete) {
-    //         let endpoint = url + "/" + id;
-    //         let options = {
-    //             headers: { "content-type": "application/json" },
-    //         }
-    //         api.del(endpoint, options)
-    //             .then((res) => {
-    //                 if (!res.err) {
-    //                     let newData = db.filter((item) => item.id !== id); //explicacion de esto en updateData
-    //                     setDb(newData);
-    //                 } else {
-    //                     setError(res);
-    //                 }
-    //             })
-    //     } else {
-    //         return
-    //     }
-    // };
+
+    //     //}
+    //     //globalPrimeraCarga =false;
+
+
+    // }, [renderizarManual]);//significa que unicamente se ejecuta la primera vez (creo que era cuando esta vacio [])
+
+
+
+    useEffect(() => {
+        // Operaciones adicionales aquí (asincrónicas)
+        // ...
+        //alert("dbRopa se ha actualizado");
+        if (dbRopa.length > 0) {
+            renderizadoManual(6, true);
+        } //es para que renderice solo cuando hay (es el error que pasa cuando apenas abris la pagina)
+
+    }, [dbRopa]);
+
+
+
+
+    const createData = (data) => { //aca va a llegar form desde CrudForm
+        data.id = Date.now(); //creamos un id que es la fecha. se guarda en milisegundos
+
+    };
+
+    const updateData = (data) => { //data es los valores de los input texts
+        let endpoint = url + "/" + data.id;
+
+
+    };
+
+
+    const deleteData = (id) => {
+        let isDelete = window.confirm(`¿Estás seguro de eliminar el registro con el id '${id}'?`);
+
+    };
+
+
+
+
+    const localStorageTest = () => {
+        alert("NUNCA DEBERIA ENTRAR ACA")
+        let arrayComoCadena = localStorage.getItem('clothes');
+
+        if (!arrayComoCadena || arrayComoCadena == null || arrayComoCadena.length == 0) {
+            setTimeout(() => {
+                let arrayComoCadena = JSON.stringify([
+                    {
+                        "id": 1,
+                        "apodo": "Jean negro corte chino",
+                        "especial_para": "Vestir",
+                        "elemento": "Pantalon"
+                    }, {
+                        "id": 2,
+                        "apodo": "Pantalon rojo de river",
+                        "especial_para": "Diario, Deportivo, Entrecasa",
+                        "elemento": "Pantalon"
+                    }, {
+                        "id": 3,
+                        "apodo": "Buzo gris adidas cuello enorme",
+                        "especial_para": "Entrecasa, Diario",
+                        "elemento": "Buzo"
+                    }]);
+                //console.log("voy a vargar en localstorage")
+                //console.log(dbRopa)
+                localStorage.setItem('clothes', arrayComoCadena);
+                //alert("LOCALSTORAGE SETEADO ")
+            }, 500);
+        } else {
+
+            //alert("aca deberia ir lo editado")
+            //console.log("dbRopa NUEVO")
+            //console.log(dbRopa)
+        }
+
+
+
+    }
 
 
 
@@ -147,15 +223,32 @@ const CrudAG = () => {
 
 
 
-    const editRopa = (idElemento, e) => {
+    // const editRopa = (idElemento, e) => {
+
+    async function editRopa(idElemento, e) {
+        //alert("editropa - Se va a editar el id " + idElemento)
+
+        //console.log('%c dbRopa', 'background: red; color: white')
+        //console.log(dbRopa)
         var vestimentaActual = dbRopa.filter(elem => elem.id === idElemento);
-        setRopaEditar(
+
+
+        //console.log('%c Vestimenta actual', 'background: red; color: white')
+        //console.log(vestimentaActual[0])
+
+        // await setRopaEditar(
+        //     objEditRopa
+        // )
+        //  alert("Lo seteamos a 0")
+        await setRopaEditar(
             vestimentaActual[0]
         )
     }
 
 
-    const renderizadoManual = (idBorrado) => { //hay mejores formas de hacerlo
+    const renderizadoManual = (idBorrado, addOrModif = false, del = false) => { //hay mejores formas de hacerlo
+
+
         setRenderizarManual("");
 
         setPrendaParamElem(""); //esto es al pedo, es para renderizar la columna del medio
@@ -163,7 +256,35 @@ const CrudAG = () => {
         setPrendaParamOcasion("");
 
 
-        setRopaActual(objRopaActual) //reinicia todo el componente 'resultado'
+        // if (del) {
+        //     setRopaActual(objRopaActual) //reinicia todo el componente 'resultado'
+        //ahora lleve esto a modificar.js
+        // }
+
+
+
+
+        //alert("SE RENDERIZO MANUALMENTE")
+
+
+
+
+
+        if (addOrModif) {
+            //alert("·agregamos en localstorage")
+            //console.log("·agregamos en localstorage")
+            //console.log(dbRopa)
+
+            localStorage.setItem('clothes', JSON.stringify(dbRopa))
+        }
+
+
+
+
+
+        //evitar la primera vuelta,
+
+
     }
 
 
@@ -187,8 +308,9 @@ const CrudAG = () => {
                         setCualInput={setCualInput}
                         renderizadoManual={renderizadoManual}
                     />
+                    <hr />
                     <div className="div-abm" >
-                        <Modificar ropaEditar={ropaEditar} renderizadoManual={renderizadoManual} />
+                        <Modificar ropaEditar={ropaEditar} renderizadoManual={renderizadoManual} dbRopa={dbRopa} setDbRopa={setDbRopa} setRopaActual={setRopaActual} setRopaEditar={setRopaEditar} />
                     </div>
                 </div>
                 <div className="div-col">
@@ -235,4 +357,14 @@ const CrudAG = () => {
 }
 
 export default CrudAG;
+
+
+
+
+
+
+
+
+
+
 

@@ -1,134 +1,90 @@
 import React from 'react'
 import './calcMoney.css'
 import Persona from './Persona';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Transaccion from './Transaccion';
 import UrlGSheets from './UrlGSheets';
 import DescargarPDF from '../../helpers/DescargarPDF';
-
-//import { DescargarPDF } from '../../helpers/DescargarPDF';
-
-
-
-
-// const initialDb = [
-//     {
-//         id: null,
-//         nombre: null,
-//         gasto: null
-//     }
-// ];
-
-// const personaActual = {
-//     id: null,
-//     nombre: null,
-//     gasto: null
-// }
+//import { useRef } from 'react';
 
 
 
 const CalculoDineroIndex = () => {
 
-    // const [personas, setPersonas] = useState(initialDb); //inicia vacio
-
-    // const sumarPersona = () => {
-
-    //     personaActual.id = Date.now();
-    //     personaActual.nombre = "agregado"
-    //     personaActual.gasto = 999
-
-    //     setPersonas([...personas, personaActual])
-    //     alert("impresion")
-    //     console.log(personas)
-
-    // }
-
-
-
-    // useEffect(() => {
-    //     alert("cambio personas")
-    // }, [personas]);
-
-
-
-
-    const [filas, setFilas] = useState(
+    //useStates
+    const [filasGastos, setFilasGastos] = useState(
         [
             { nombre: '', gasto: '' }
         ]
     );
-
-
     const [transactions, setTransactions] = useState([]);
-
     const [showInputSheets, setShowInputSheets] = useState(false);
-
     const [individualSpents, setIndividualSpents] = useState([]);
+    const [showReport, setShowReport] = useState(true);
+    const [isDownloadingReport, setIsDownloadingReport] = useState(false);
+    const [nombreJuntada, setNombreJuntada] = useState('');//nombre de la juntada texto editable
+    //const juniorRef = useRef(null);
 
 
 
-
-
-
-
-
-
-
-    const handleInputChange = (event, index) => {
-
-
-        setTransactions([]); //lo volvemos a 0 si algo cambió
-        setIndividualSpents([]);
-
-
-        const { name, value } = event.target; //saca el nombre y el valor de la fila actual (el elemento persona)
-        const nuevasFilas = [...filas]; //copia lo que ya tiene
-        nuevasFilas[index][name] = value; //del que está modificando(index), le va agregando el valor
-        setFilas(nuevasFilas);
-    };
-
-    const agregarFila = () => {
+    const handleInputChange = (event, index) => { //cambian los inputs personas
+        // volvemos a 0 si algo cambió
         setTransactions([]);
         setIndividualSpents([]);
 
+        const { name, value } = event.target; //saca el nombre y el valor de la fila actual (el elemento persona)
+        //en name puede venir 'nombre' o 'gasto', que son los nombres de los inputs
+        const nuevasFilasGastos = [...filasGastos]; //copia lo que ya tiene
+        nuevasFilasGastos[index][name] = value; //del que está modificando(index), le va agregando el valor
 
-        setFilas(
+        setFilasGastos(nuevasFilasGastos);
+    };
+
+
+
+    const agregarFila = () => {
+        // volvemos a 0 al agregar fila
+        setTransactions([]);
+        setIndividualSpents([]);
+
+        //seteamos una nueva fila vacia
+        setFilasGastos(
             [
-                ...filas,
+                ...filasGastos,
                 { nombre: '', gasto: '' } //agrega una fila vacia para poder rellenar los campos
             ]
         );
     };
 
 
-    const eliminarFila = (i) => {
 
+    const eliminarFila = (i) => {
+        //volvemos a 0 para que el usuario tenga que recalcular de nuevo
         setTransactions([]);
         setIndividualSpents([]);
 
-
-        if (filas.length > 1) { //el array.length de los nombres es > a 1 
-            const nuevasFilas = [...filas].filter(function (elemento, indice) {
+        if (filasGastos.length > 1) { //el array.length de los nombres es > a 1 
+            //si es mayor a uno significa que hay al menos 2 personas
+            const nuevasFilasGastos = [...filasGastos].filter(function (elemento, indice) {
                 if (indice != i) {
+                    //retorna todos los elementos menos el que tiene el indice que seleccioné
                     return elemento
                 }
             });
-
-            setFilas(nuevasFilas);
+            setFilasGastos(nuevasFilasGastos);
         } else {
-            setFilas([
+            //entra en este else cuando hay una sola persona. Entonces, vacía el unico elemento que encuentra
+            setFilasGastos([
                 { nombre: '', gasto: '' }
-            ]); //volvemos a 0 
+            ]);
         }
-
     }
 
 
 
 
-
     const calcularReparto = () => {
-        var listaObj = filas.map((elem) => {
+        var listaObjGastos = filasGastos.map((elem) => {
             return {
                 nombre: elem.nombre,
                 gasto: parseInt(elem.gasto)
@@ -137,106 +93,104 @@ const CalculoDineroIndex = () => {
         });
 
 
-
         //limpiamos los que no tengan nombre ni gasto
-        listaObj = listaObj.filter(elem => elem.nombre != "" && elem.gasto >= 0);
-        console.log("listaObj")
-        console.log(listaObj)
-
-
-
-
-
-
-
-
+        listaObjGastos = listaObjGastos.filter(elem => elem.nombre != "" && elem.gasto >= 0);
+        // console.log("listaObjGastos") // console.log(listaObjGastos)
 
 
 
         //primera parte
-        listaObj = listaObj.reduce((p, c) => { // <-- primero agrupamos por nombre
+        listaObjGastos = listaObjGastos.reduce((p, c) => { // <-- primero agrupamos por nombre
             p[c.nombre.trim()] = (p[c.nombre.trim()] || 0) + c.gasto;
             return p;
         }, {})
+        //El primer parámetro de reduce() es una función que se ejecutará en cada elemento del array. 
+        // Esta función recibe dos parámetros: p (el valor acumulado hasta el momento) y 
+        // c (el elemento actual del array).
+        //En la función, se utiliza la propiedad nombre del objeto c como clave 
+        // en el objeto acumulador p. Si la clave ya existe en el objeto p (lo que hay entre parentesis), 
+        // se suma el valor de gasto al valor existente en la clave. Si la 
+        // clave no existe en el objeto p, se crea la clave con valor 0 y
+        //  se le suma el valor de gasto.
+        //posible resultado: {    Juan: 70,    María: 45,    Pedro: 10}
 
 
-        let listaObjSumado = listaObj;//cruda, lo que realmente gastó cada persona
-        console.log("TOTALGASTAOD")
-        console.log(listaObjSumado)
-
-        //{agustin:1, lucas:0}
-
+        let listaObjGastosSumado = listaObjGastos;//cruda, lo que realmente gastó cada persona.
+        //lo hice asi para separar y trabajar mas limpio. Teniendo en cuenta que en procesarObjeto voy a modificar la variable recientemente creada
+        //console.log("totalgastado")        console.log(listaObjGastosSumado)
 
 
         async function procesarObjeto() {
+            listaObjGastosSumado = Object.entries(listaObjGastosSumado).map(([key, value]) => ({ nombre: key, gasto: value }));
+            //La primera línea convierte listaObjGastosSumado en un array de objetos con la propiedad nombre y gasto.
+            //transforma un objeto en un array de objetos
 
-            listaObjSumado = Object.entries(listaObjSumado).map(([key, value]) => ({ nombre: key, gasto: value }));
+            let listaObjGastosSumado2 = [];
 
-            let listaObjSumado2 = [];
-
-            await listaObjSumado.map((e) => {
-                listaObjSumado2.push({
+            await listaObjGastosSumado.map((e) => {
+                listaObjGastosSumado2.push({
                     nombre: e.nombre,
                     gasto: e.gasto
                 });
             });
-
-            await setIndividualSpents(listaObjSumado2);
+            await setIndividualSpents(listaObjGastosSumado2);
         }
-
         procesarObjeto();
 
 
 
 
-
-
-
-
-
-        const resultado = Object.keys(listaObj).map(e => { // <-- después transformamos el formato
+        const resultado = Object.keys(listaObjGastos).map(e => {
             const o = {};
             o.nombre = e;
-            o.gasto = listaObj[e];
+            o.gasto = listaObjGastos[e];
             return o;
         })
-        listaObj = resultado;
+        listaObjGastos = resultado;
+        //por lo que entiendo hace lo mismo que en la funcion anterior
+        /*gpt:
+        procesarObjeto hace lo mismo que const resultado?
+        Sí, ambos fragmentos de código tienen como objetivo transformar un 
+        objeto en un array de objetos con la misma estructura, donde cada objeto 
+        tenga una propiedad "nombre" y una propiedad "gasto". 
+        
+        En términos de resultados, ambos fragmentos de código hacen lo mismo, 
+        pero el primer fragmento es un poco más explícito en su uso de Object.entries 
+        y puede ser más fácil de entender para alguien que no está familiarizado con el método Object.keys
+        */
 
+        //en un futuro se podria unificar, pero por ahora lo dejo asi. 18/4/23
 
 
 
 
         //segunda parte
+
+        //sacamos el promedio de todo lo gastado
         var totalPromedio = 0;
-        for (var i = 0; i < listaObj.length; i++) {
-            totalPromedio = totalPromedio + parseInt(listaObj[i].gasto)
+        for (var i = 0; i < listaObjGastos.length; i++) {
+            totalPromedio = totalPromedio + parseInt(listaObjGastos[i].gasto)
         }
+        totalPromedio = totalPromedio / listaObjGastos.length;
+        //console.log("el promedio es" , totalPromedio)    console.log("-----diferencias-----")    console.log(listaObjGastos[0].nombre + " " + (listaObjGastos[0].gasto - totalPromedio))    console.log(listaObjGastos[1].nombre + " " + (listaObjGastos[1].gasto - totalPromedio))    console.log(listaObjGastos[2].nombre + " " + (listaObjGastos[2].gasto - totalPromedio))    console.log(listaObjGastos[3].nombre + " " + (listaObjGastos[3].gasto - totalPromedio))   console.log("-------------")
 
-        totalPromedio = totalPromedio / listaObj.length;
-        //console.log("el promedio es" , totalPromedio)    console.log("-----diferencias-----")    console.log(listaObj[0].nombre + " " + (listaObj[0].gasto - totalPromedio))    console.log(listaObj[1].nombre + " " + (listaObj[1].gasto - totalPromedio))    console.log(listaObj[2].nombre + " " + (listaObj[2].gasto - totalPromedio))    console.log(listaObj[3].nombre + " " + (listaObj[3].gasto - totalPromedio))   console.log("-------------")
-        var listaObjMayores = listaObj.filter(per => per.gasto > totalPromedio);
-        var listaObjMenores = listaObj.filter(per => per.gasto < totalPromedio);
+
+        //separamos los que pagaron mas y los que pagaron menos
+        var listaObjMayores = listaObjGastos.filter(per => per.gasto > totalPromedio);
+        var listaObjMenores = listaObjGastos.filter(per => per.gasto < totalPromedio);
         //console.log("mayores:")     console.log(listaObjMayores)     console.log("menores:")    console.log(listaObjMenores)
-
-        // class transacciones {
-        //     constructor(sender, receiver, diference) {
-        //         this.sender = sender;
-        //         this.receiver = receiver;
-        //         this.diference = diference
-        //     }
-        // }
 
         var arrayTransacciones = [];
 
         listaObjMenores.forEach(personaMenor => {
-            if (personaMenor.gasto < totalPromedio) {
-                //console.log(personaMenor.nombre, "le paga a:");
-                var diferenciaDisponible = totalPromedio - personaMenor.gasto; //hasta aca bien
-                //aca viene 175
+            if (personaMenor.gasto < totalPromedio) { //pregunto si es menor porque puede ser que de exacto. Aunque lo pienso y no deberia, ya que no puse <= ni >= cuando los declare
+
+                var diferenciaDisponible = totalPromedio - personaMenor.gasto;
+
                 listaObjMayores.forEach(personaMayor => { //para devolverles plata a los que pagaron de mas
 
-                    if (personaMenor.gasto < totalPromedio && personaMayor.gasto > totalPromedio) { //los que pagaron de mas
-                        var diferenciaMayor = personaMayor.gasto - totalPromedio;
+                    if (personaMayor.gasto > totalPromedio) { //los que pagaron de mas. //personaMenor.gasto < totalPromedio && 
+                        //var diferenciaMayor = personaMayor.gasto - totalPromedio;
 
                         personaMenor.gasto = personaMenor.gasto + diferenciaDisponible;
                         personaMayor.gasto = personaMayor.gasto - diferenciaDisponible;
@@ -250,10 +204,7 @@ const CalculoDineroIndex = () => {
                         }
 
                         var totalPagado = diferenciaDisponible - diferenciaExtra;
-                        console.log(personaMenor.nombre + " le paga a " + personaMayor.nombre + " la suma de: " + totalPagado)
-
-
-
+                        //console.log(personaMenor.nombre + " le paga a " + personaMayor.nombre + " la suma de: " + totalPagado)
 
                         arrayTransacciones.push(
                             // new transacciones(personaMenor.nombre, personaMayor.nombre, totalPagado)
@@ -262,7 +213,6 @@ const CalculoDineroIndex = () => {
                                 sender: personaMenor.nombre,
                                 receiver: personaMayor.nombre,
                                 difference: totalPagado
-
                             }
                         )
                     }
@@ -270,30 +220,15 @@ const CalculoDineroIndex = () => {
             }
         })
 
-        console.log(arrayTransacciones);
-        console.log("TIPO");
-        console.log(typeof (arrayTransacciones));
+        // console.log(arrayTransacciones);      // console.log("TIPO");        // console.log(typeof (arrayTransacciones));
         setTransactions(
-
             arrayTransacciones
         )
-        //arrayTransacciones es lo que tiene que pagar el usuario
     }
 
 
 
-
-
-
-
-
-
-
-
-    //nombre de la juntada texto editable
-    const [nombreJuntada, setNombreJuntada] = useState('');
-
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event) => { //para que no ingresen 'enter'
         if (event.keyCode === 13) {
             event.preventDefault();
         }
@@ -303,46 +238,57 @@ const CalculoDineroIndex = () => {
 
     const handleShowInputSheets = () => {
         setShowInputSheets(!showInputSheets)
-
     }
 
 
 
-    const descargarPDF = () => {
-        alert("descargando pdf")
+    const handleClickParent = () => {
+        // juniorRef.current.onClick();
+        //hace click a boton del hijo desde el boton padre
+        //es una mala practica pero no encontre mejor forma
+        var botonHijo = document.querySelector('#btnDescargarRep');
+        botonHijo.click();
+    };
+
+
+
+
+    const limpiar = () => {
+        //reiniciamos todo
+        setFilasGastos(
+            [
+                { nombre: '', gasto: '' }
+            ]
+        );
+
+        setTransactions([]);
+        setShowInputSheets(false);
+        setIndividualSpents([]);
+        setShowReport(true);
+        setIsDownloadingReport(false);
+        setNombreJuntada('');
     }
-
-
 
 
 
     return (
         <>
             <h2>Reparto de dinero</h2>
-
-            {/* <h4 className="dy-bl ">Nombre de la juntada:</h4> */}
-            {/* <label className="labelEditable" contentEditable="true" >Escriba nombre de la juntada</label> */}
-            {/*  */}
-
-
             <input
                 className="input-nombreJuntada"
                 value={nombreJuntada}
-                maxlength="40"
+                maxLength="40"
                 onChange={(event) => setNombreJuntada(event.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Escriba nombre de la juntada"
-
-
+                autoComplete="off"
             />
 
             <br />
             <br />
-            <div div className="containerGSheets" >
-                <a className="aUrlSheets" onClick={handleShowInputSheets}>ingresar link de google sheet</a>
-                {/* <span>🔽</span> */}
 
-
+            <div className="containerGSheets" >
+                <a className="aUrlSheets" onClick={handleShowInputSheets}>Ingresar link de Google Sheets</a>
 
                 {
                     showInputSheets ?
@@ -353,94 +299,71 @@ const CalculoDineroIndex = () => {
                         </a>)
                 }
 
-
                 <br />
-
 
                 {
                     showInputSheets ?
-                        (<UrlGSheets setFilas={setFilas} handleShowInputSheets={handleShowInputSheets} />) :
+                        (<UrlGSheets setFilasGastos={setFilasGastos} handleShowInputSheets={handleShowInputSheets} setTransactions={setTransactions} />)
+                        :
                         ("")
                 }
-
 
             </div>
 
 
-            {/* {personas.length > 0 ?
-                personas.map((elemento) => (
-                    <Persona objPersona = {elemento} />
-                ))
-                :  */
-                filas.map((fila, index) => (<Persona handleInputChange={handleInputChange} fila={fila} index={index} eliminarFila={eliminarFila} />))
-                /*                                                          cuando le pasamos fila le pasamos 1 objeto del array, por eso al modificar sabe cual es cual*/
+            <button className="btn4c btnReset" onClick={limpiar}>Reiniciar</button>
+
+
+            {
+                filasGastos.map((filaP, indexP) => (<Persona key={indexP.toString()} handleInputChange={handleInputChange} fila={filaP} index={indexP} eliminarFila={eliminarFila} />))
+                //cuando le pasamos fila le pasamos 1 objeto del array, por eso al modificar sabe cual es cual
             }
 
-
-            {/* <i class="bi bi-plus-circle-fill botonBootstrap"   onClick={agregarFila} ></i> NO HUBO FORMA DE HACER CON ESTO, NO SE CENTRABA VERTICALMENTE */}
-
             <br />
-
-
 
 
             <a className="aContenedorIcono" onClick={agregarFila}>
-                {/* <img src="https://w7.pngwing.com/pngs/535/334/png-transparent-computer-icons-add-button-logo-number-add-button-thumbnail.png" width="35rem" /> */}
+                {/* <img src="https://w7.pngwing.com/pngs/535/334/png-transparent-computer-icons-add-button-logo-number-add-button-thumbnail.png" />  lo saque porque era redondo*/}
                 <img src="https://cdn-icons-png.flaticon.com/512/25/25668.png" width="35rem" />
             </a>
 
-
-            {/* <button className="botonMas" onClick={agregarFila}>+</button> */}
-
             <br />
             <br />
-            <button className="btnCalcular" onClick={calcularReparto}>Calcular</button>
 
 
+            <button className="btn4c" onClick={calcularReparto}>Calcular</button>
 
 
+            {
+                transactions.length > 0 ? (
+                    <>
+                        <hr />
+                        {
+                            transactions.map((item) => <Transaccion key={item.sender.charAt(0) + "-" + item.receiver.charAt(0) + "-" + item.difference.toString() } transaccion={item} />)
+                            //sender, receiver, difference. Armé casero un key
+                            
+                        }
+
+                        <button className="btn4c" onClick={handleClickParent}>Descargar Reporte</button>
+                    </>
+                ) : (
+                    <></>
+                )
+            }
 
 
-
-
-            <hr />
-
-
-            {transactions.length > 0 ? (
-                transactions.map((item) => <Transaccion transaccion={item} />)
-            ) : (
-                <p>&nbsp;</p>
-            )}
-
-            <hr /> <hr /> <hr /> <hr />
-            {individualSpents.length > 0 ? (
-                individualSpents.map((item) =>  
-                 <div>
-                <p>{item.nombre} __ {item.gasto}</p>
-                 limite de 28 como el 128
-                 </div>
-             )
-            ) : (
-                <p>&nbsp;</p>
-            )}
-            <hr /> <hr /> <hr /> <hr />
-
-
-
-            <button onClick={descargarPDF}>Descargar PDF</button>
-
-
-            <hr />
-            <hr />
-            <hr />
-            <hr />
-            <DescargarPDF transactions={transactions} nameParty={nombreJuntada} />
-
-
-
+            {
+                showReport ?
+                    (
+                        <DescargarPDF transactions={transactions} nameParty={nombreJuntada} individualSpents={individualSpents} />
+                        //, setIsDownloadingReport, isDownloadingReport, handleClickParent 
+                        //ref={juniorRef}
+                    )
+                    :
+                    ("")
+            }
         </>
     )
-
 }
 
 
@@ -448,7 +371,10 @@ export default CalculoDineroIndex;
 
 
 
-//ponerle color de paleta de colores elegida en internet
+
+
+
+
 
 
 
@@ -459,6 +385,4 @@ busque una pag en internet y me dijo que volviera a descargar el package json y 
 decia borrar la carpeta node_modules. lo hice. despues npm install. 
 y ahora volvi a las 7 vulnerabilidades yupii creo que se soluciono xd
 tambien tuve que borrar cache npm
-
-
 */ 

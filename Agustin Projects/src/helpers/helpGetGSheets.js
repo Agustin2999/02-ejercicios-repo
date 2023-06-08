@@ -1,15 +1,9 @@
-//un helper es un ayudador. algo que no tiene ui (interfaz) pero te ayuda a resolver algo mediante una funcion o lo que sea
-//ej. un helper que te pase la fecha de 01/01/2000 a Lunes 1 de enero de 2000
-
-//se diferencia de un hook personalizado xq un hook personalizado usa a su vez hooks de react. esto no
-//y bueno en este caso este helper NO es react, es js puro. es decir, se puede reutilizar en todos lados
-
 
 export const helpGetGSheets = (sheetID, sheetNameP, colNames, colSpendings) => {
     const sheetId = sheetID;
 
     const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
-    const sheetName = sheetNameP.toLowerCase().trim();
+    const sheetName = sheetNameP.toLowerCase().trim(); //tenga o no mayuscula, lo busca igual. comprobado 27/4/23
     const query = encodeURIComponent('Select *')
     const url = `${base}&sheet=${sheetName}&tq=${query}`
 
@@ -23,14 +17,14 @@ export const helpGetGSheets = (sheetID, sheetNameP, colNames, colSpendings) => {
 
     return new Promise((resolve, reject) => {
 
-
         fetch(url)
             .then(res => res.text())
             .then(rep => {
-                //Remove additional text and extract only JSON:
-                const jsonData = JSON.parse(rep.substring(47).slice(0, -2));
 
-                //Extract column labels and indexes
+                //Remove additional text and extract only JSON:
+                const jsonData = JSON.parse(rep.substring(47).slice(0, -2)); //es sobrante que trae el propio json 
+
+                //Extract indexes de acuerdo al nombre de columna
                 for (let i = 0; i < jsonData.table.cols.length; i++) {
                     if (jsonData.table.cols[i].label.toLowerCase().trim() == nombreColNombre) {
                         numColNombre = i;
@@ -40,31 +34,26 @@ export const helpGetGSheets = (sheetID, sheetNameP, colNames, colSpendings) => {
                     }
                 }
 
-                //extract row data:
-                //console.log(jsonData.table.rows)
-                jsonData.table.rows.forEach((item) => {
 
+                //extract row data:
+                jsonData.table.rows.forEach((item) => {//fila por fila
                     diccionario.push(
                         {
                             name: item.c[numColNombre].v,
                             spending: item.c[numColGasto].v
                         }
+                        //c y v son algo propio del json de google
+                        //c es un array de una fila completa, en donde tiene objetos segun columnas tenga
                     );
                 })
 
-                //console.log(diccionario)
-                // console.log(diccionario )
-                console.log("retornado")
-                console.log(diccionario)
+                // console.log("%c retornado",   'background: #222; color: #bada55')
+                // //console log con estilo style
+                // console.log(diccionario)
 
-                resolve(diccionario);
-
+                resolve(diccionario); //esto lo agregué porque tenia error de asyncronia. Entonces lo encerré en una promesa
             })
-
-
-
     })
-
 }
 
-
+ 
