@@ -32,7 +32,64 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
-} 
+}
+
+
+
+
+.navMenuApps {
+  margin: 0.7rem;
+  border: 1px solid blue;
+  padding: 0.5rem;
+  background: transparent;
+  border-radius: 0.5rem;
+  cursor: pointer
+}
+
+.navMenuApps a {
+  color: blue;
+
+
+}
+
+.seleccionado {
+  background: blue;
+  color: white;
+}
+
+.seleccionado a {
+  /*a en realidad es Link*/
+  color: white;
+
+}
+
+.divAppMain {
+  margin: 2rem
+}
+
+
+
+ 
+.app-aContenedorLinkPaginas {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  align-content: center;
+  
+}
+ 
+ 
+
+ 
+
+
+
+
+
+
+
+

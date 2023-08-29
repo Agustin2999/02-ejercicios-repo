@@ -291,7 +291,7 @@ const CrudAG = () => {
 
     return (
         <>
-            <h2>Agustin</h2>
+            <h2>Ropero</h2>
             {/* <table>
     <tbody>
         <tr>

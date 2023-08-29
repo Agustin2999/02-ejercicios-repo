@@ -426,8 +426,9 @@ const Modificar = ({ ropaEditar, renderizadoManual, setBdTestLocalStorage, dbRop
 
 
 
-                        <div className="roContainerTxtArea">
-                            <label class="labelOcasion2" for="especial_para">Ocasión:</label>
+                        <div className="roContainerTxtArea" >
+                            <label class="labelOcasion2" for="especial_para"  >Ocasión:</label>
+                           
                             <textarea type="search" className="roTxtArea" name="ocasionNoUsado" id="especial_para" onChange={handleChange} value={formulario.especial_para} autocomplete="off" style={casiInput}></textarea>
                         </div>
                         <br /><br />
