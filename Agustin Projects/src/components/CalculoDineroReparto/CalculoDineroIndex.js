@@ -180,6 +180,28 @@ const CalculoDineroIndex = () => {
         var listaObjMenores = listaObjGastos.filter(per => per.gasto < totalPromedio);
         //console.log("mayores:")     console.log(listaObjMayores)     console.log("menores:")    console.log(listaObjMenores)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         var arrayTransacciones = [];
 
         listaObjMenores.forEach(personaMenor => {
@@ -187,36 +209,44 @@ const CalculoDineroIndex = () => {
 
                 var diferenciaDisponible = totalPromedio - personaMenor.gasto;
 
-                listaObjMayores.forEach(personaMayor => { //para devolverles plata a los que pagaron de mas
 
-                    if (personaMayor.gasto > totalPromedio) { //los que pagaron de mas. //personaMenor.gasto < totalPromedio && 
-                        //var diferenciaMayor = personaMayor.gasto - totalPromedio;
+                if (diferenciaDisponible >= 0) {
 
-                        personaMenor.gasto = personaMenor.gasto + diferenciaDisponible;
-                        personaMayor.gasto = personaMayor.gasto - diferenciaDisponible;
 
-                        var diferenciaExtra = 0;
-                        if (personaMayor.gasto < totalPromedio) { //si le devolvieron mas de lo que pagó
-                            diferenciaExtra = totalPromedio - personaMayor.gasto;
+                    listaObjMayores.forEach(personaMayor => { //para devolverles plata a los que pagaron de mas
 
-                            personaMayor.gasto = personaMayor.gasto + diferenciaExtra;
-                            personaMenor.gasto = personaMenor.gasto - diferenciaExtra;
+                        if (personaMayor.gasto > totalPromedio && personaMenor.gasto < totalPromedio) { //los que pagaron de mas. //personaMenor.gasto < totalPromedio && 
+                            //var diferenciaMayor = personaMayor.gasto - totalPromedio;
+
+                            personaMenor.gasto = personaMenor.gasto + diferenciaDisponible;
+                            personaMayor.gasto = personaMayor.gasto - diferenciaDisponible;
+
+                            var diferenciaExtra = 0;
+                            if (personaMayor.gasto < totalPromedio) { //si le devolvieron mas de lo que pagó
+                                diferenciaExtra = totalPromedio - personaMayor.gasto;
+
+                                personaMayor.gasto = personaMayor.gasto + diferenciaExtra;
+                                personaMenor.gasto = personaMenor.gasto - diferenciaExtra;
+                            }
+
+                            var totalPagado = diferenciaDisponible - diferenciaExtra;
+                            //console.log(personaMenor.nombre + " le paga a " + personaMayor.nombre + " la suma de: " + totalPagado)
+
+                            arrayTransacciones.push(
+                                // new transacciones(personaMenor.nombre, personaMayor.nombre, totalPagado)
+                                //probamos hacerlo sin POO
+                                {
+                                    sender: personaMenor.nombre,
+                                    receiver: personaMayor.nombre,
+                                    difference: totalPagado
+                                }
+                            )
                         }
 
-                        var totalPagado = diferenciaDisponible - diferenciaExtra;
-                        //console.log(personaMenor.nombre + " le paga a " + personaMayor.nombre + " la suma de: " + totalPagado)
+                    })
 
-                        arrayTransacciones.push(
-                            // new transacciones(personaMenor.nombre, personaMayor.nombre, totalPagado)
-                            //probamos hacerlo sin POO
-                            {
-                                sender: personaMenor.nombre,
-                                receiver: personaMayor.nombre,
-                                difference: totalPagado
-                            }
-                        )
-                    }
-                })
+
+                } //if hay diferencia
             }
         })
 
@@ -339,9 +369,9 @@ const CalculoDineroIndex = () => {
                     <>
                         <hr />
                         {
-                            transactions.map((item) => <Transaccion key={item.sender.charAt(0) + "-" + item.receiver.charAt(0) + "-" + item.difference.toString() } transaccion={item} />)
+                            transactions.map((item) => <Transaccion key={item.sender.charAt(0) + "-" + item.receiver.charAt(0) + "-" + item.difference.toString()} transaccion={item} />)
                             //sender, receiver, difference. Armé casero un key
-                            
+
                         }
 
                         <button className="btn4c" onClick={handleClickParent}>Descargar Reporte</button>
